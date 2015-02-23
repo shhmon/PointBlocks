@@ -49,7 +49,9 @@ class Character(pygame.Rect):
         for character in Character.List:
             if Tile.get_tile(character.get_number()).type == 'hole':
                 if Tile.get_tile(character.get_number()).x == character.x and Tile.get_tile(character.get_number()).y == character.y:
-                    Character.List.remove(character)
+                    if not character.has_target():
+                        Tile.freeze = True
+                        Tile.load_level(Tile.level)
 
             if Tile.loading_level == True:
                 if character.name == 'Bill':
