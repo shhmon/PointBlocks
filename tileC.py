@@ -38,8 +38,8 @@ class Tile(pygame.Rect):
 
         if level == 1:
             Tile.level = 1
-            Tile.valids = [74, 75, 97, 119, 141, 140, 139, 142, 165, 144, 145, 167, 189, 211, 212, 213, 214, 215, 193, 171, 149, 127, 105, 104, 73, 95]
-            Tile.holes = [72, 138]
+            Tile.valids = [74, 75, 97, 119, 141, 142, 165, 144, 145, 167, 189, 211, 212, 213, 214, 215, 193, 171, 149, 127, 105, 104, 73, 95]
+            Tile.holes = [72, 140]
             Tile.spawning_points = [(Tile.width * 16, Tile.height * 4), (Tile.width * 8, Tile.height * 3)] # bill, bull
             Tile.meeting_point = 143
 

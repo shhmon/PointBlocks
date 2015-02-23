@@ -5,6 +5,11 @@ from interaction import interaction
 
 pygame.init()
 
+sound = pygame.mixer.Sound("audio/music.wav")
+sound.set_volume(.1)
+sound.play(-1)
+
+
 screen = pygame.display.set_mode(Tile.screen_size)
 pygame.display.set_caption('Point Blocks 0.01')
 background = pygame.image.load("images/background.png")
