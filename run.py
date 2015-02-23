@@ -6,7 +6,7 @@ from interaction import interaction
 pygame.init()
 
 screen = pygame.display.set_mode(Tile.screen_size)
-pygame.display.set_caption('PointBlocks 0.01')
+pygame.display.set_caption('Point Blocks 0.01')
 
 clock = pygame.time.Clock()
 FPS = 60
@@ -29,7 +29,7 @@ while True:
     bill.movement()
     bull.movement() 
 
-    Tile.show_info(screen, bill, bull)
+    #Tile.show_info(screen, bill, bull)
 
     pygame.display.flip()
     clock.tick(FPS)

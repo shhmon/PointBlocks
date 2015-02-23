@@ -18,7 +18,7 @@ class Character(pygame.Rect):
     def __str__(self):
         return str(self.get_number())
 
-    def set_target(self, next_tile): #sets target for character movement function
+    def set_target(self, next_tile): #SETS A TARGET X & Y FOR THE MOVEMENT FUNCTION
         if self.tx == None and self.ty == None:
             self.tx = next_tile.x
             self.ty = next_tile.y
@@ -30,7 +30,7 @@ class Character(pygame.Rect):
         return Tile.get_tile(self.get_number())
 
     @staticmethod
-    def on_point(): #returns true if both characters are on the meeting point
+    def on_point(): #RETURNS TRUE IF BOTH CHARACTERS X & Y = meeting_point's X & Y (are on meeting_point)
         on = 0
         for character in Character.List:
             if character.x == Tile.get_tile(Tile.meeting_point).x and character.y == Tile.get_tile(Tile.meeting_point).y:
@@ -39,12 +39,19 @@ class Character(pygame.Rect):
             return True
 
     @staticmethod
-    def update_characters(bill, bull): #looks for characters falling in holes or standing on the meeting point
-        i = Tile.level
+    def update_characters(bill, bull): #LOOKS FOR CHARACTERS FALLING IN HOLES OR STANDING ON MEETING POINT. IF loading_level IS TRUE, MOVES CHARACTERS TO SPAWNING POINTS
         for character in Character.List:
             if Tile.get_tile(character.get_number()).type == 'hole':
                 if Tile.get_tile(character.get_number()).x == character.x and Tile.get_tile(character.get_number()).y == character.y:
                     Character.List.remove(character)
+
+            if Tile.loading_level == True:
+                if character.name == 'Bill':
+                    character.x, character.y = Tile.spawning_points[0][0], Tile.spawning_points[0][1]
+                elif character.name == 'Bull':
+                    character.x, character.y = Tile.spawning_points[1][0], Tile.spawning_points[1][1]
+
+        Tile.loading_level = False
 
         if bill.x == Tile.get_tile(Tile.meeting_point).x and bill.y == Tile.get_tile(Tile.meeting_point).y and not Character.on_point():
             bill.status = 'happy'
@@ -59,7 +66,6 @@ class Character(pygame.Rect):
             bull.status = 'happy'
             Tile.freeze = True
             Tile.load_level(Tile.level + 1)
-            i += 1
 
         else:
             bill.status = 'sad'
@@ -67,7 +73,7 @@ class Character(pygame.Rect):
 
 
     @staticmethod
-    def draw_characters(screen): #draws characters according to their status (sad/happy)
+    def draw_characters(screen): #CHANGES CHARACTER SPRITES ACCORDING TO THEIR STATUS (sad/happy)
         for character in Character.List:
             if character.status == 'sad':
                 if character.name == 'Bill':
@@ -97,9 +103,9 @@ class Bill(Character):
         self.name = 'Bill'
         Character.List.append(self)
 
-    def movement(self): #moves character according to velocity one frame at a time
+    def movement(self): #MOVES CHARACTER ACCORDING TO VELOCITY ONE FRAME AT A TIME
 
-        if self.tx != None and self.ty != None: # Target is set
+        if self.tx != None and self.ty != None: #IF set_target DID ITS JOB
 
             X = self.x - self.tx
             Y = self.y - self.ty
@@ -133,7 +139,7 @@ class Bull(Character):
 
     def movement(self):
 
-        if self.tx != None and self.ty != None: # Target is set
+        if self.tx != None and self.ty != None:
 
             X = self.x - self.tx
             Y = self.y - self.ty
