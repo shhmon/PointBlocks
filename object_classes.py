@@ -23,6 +23,12 @@ class Character(pygame.Rect):
             self.tx = next_tile.x
             self.ty = next_tile.y
 
+    def has_target(self): #RETURNS IF CHARACTER TARGET IS SET, FALSE OTHERWISE
+        if self.tx == None and self.ty == None:
+            return False
+        else:
+            return True
+
     def get_number(self):
         return ((self.x / self.width) + Tile.H) + ((self.y / self.height) * Tile.V)
 
@@ -39,7 +45,7 @@ class Character(pygame.Rect):
             return True
 
     @staticmethod
-    def update_characters(bill, bull): #LOOKS FOR CHARACTERS FALLING IN HOLES OR STANDING ON MEETING POINT. IF loading_level IS TRUE, MOVES CHARACTERS TO SPAWNING POINTS
+    def update_characters(bill, bull): #LOOKS FOR CHARACTERS FALLING IN HOLES OR STANDING ON MEETING POINT. IF loading_level IS TRUE, TELEPORTS CHARACTERS TO SPAWNING POINTS
         for character in Character.List:
             if Tile.get_tile(character.get_number()).type == 'hole':
                 if Tile.get_tile(character.get_number()).x == character.x and Tile.get_tile(character.get_number()).y == character.y:

@@ -23,8 +23,7 @@ while True:
     Character.update_characters(bill, bull)
     Character.draw_characters(screen)
 
-    interaction(screen, bill)
-    interaction(screen, bull)
+    interaction(screen, bill, bull)
 
     bill.movement()
     bull.movement() 
