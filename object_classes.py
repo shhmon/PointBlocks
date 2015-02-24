@@ -1,7 +1,5 @@
-import pygame, random
+import pygame, random, functions
 from tileC import Tile
-
-pygame.mixer.init()
 
 
 class Character(pygame.Rect):
@@ -10,10 +8,12 @@ class Character(pygame.Rect):
     List = []
     vel = 3
 
-    def __init__(self, x, y):
+    def __init__(self, name, x, y):
 
         self.tx, self.ty = None, None
+        self.name = name
         pygame.Rect.__init__(self, x, y, Character.width, Character.height)
+        Character.List.append(self)
 
     def __str__(self):
         return str(self.get_number())
@@ -22,6 +22,8 @@ class Character(pygame.Rect):
         if self.tx == None and self.ty == None:
             self.tx = next_tile.x
             self.ty = next_tile.y
+
+            Tile.moves += 0.5
 
     def has_target(self): #RETURNS IF CHARACTER TARGET IS SET, FALSE OTHERWISE
         if self.tx == None and self.ty == None:
@@ -36,10 +38,15 @@ class Character(pygame.Rect):
         return Tile.get_tile(self.get_number())
 
     @staticmethod
+    def respawn(bill, bull):
+        bill.x, bill.y = Tile.MAP['spawn'][0][0], Tile.MAP['spawn'][0][1]
+        bull.x, bull.y = Tile.MAP['spawn'][1][0], Tile.MAP['spawn'][1][1]
+
+    @staticmethod
     def on_point(): #RETURNS TRUE IF BOTH CHARACTERS X & Y = meeting_point's X & Y (are on meeting_point)
         on = 0
         for character in Character.List:
-            if character.x == Tile.get_tile(Tile.meeting_point).x and character.y == Tile.get_tile(Tile.meeting_point).y:
+            if character.x == Tile.get_tile(Tile.MAP['point']).x and character.y == Tile.get_tile(Tile.MAP['point']).y:
                 on += 1
         if on == len(Character.List):
             return True
@@ -51,21 +58,18 @@ class Character(pygame.Rect):
                 if Tile.get_tile(character.get_number()).x == character.x and Tile.get_tile(character.get_number()).y == character.y:
                     if not character.has_target():
                         Tile.freeze = True
-                        Tile.load_level(Tile.level)
+                        functions.load_level(Tile.MAP['level'])
 
-            if Tile.loading_level == True:
-                if character.name == 'Bill':
-                    character.x, character.y = Tile.spawning_points[0][0], Tile.spawning_points[0][1]
-                elif character.name == 'Bull':
-                    character.x, character.y = Tile.spawning_points[1][0], Tile.spawning_points[1][1]
+        if Tile.loading_level == True:
+            Character.respawn(bill, bull)
 
         Tile.loading_level = False
 
-        if bill.x == Tile.get_tile(Tile.meeting_point).x and bill.y == Tile.get_tile(Tile.meeting_point).y and not Character.on_point():
+        if bill.x == Tile.get_tile(Tile.MAP['point']).x and bill.y == Tile.get_tile(Tile.MAP['point']).y and not Character.on_point():
             bill.status = 'happy'
             bull.status = 'sad'
 
-        elif bull.x == Tile.get_tile(Tile.meeting_point).x and bull.y == Tile.get_tile(Tile.meeting_point).y and not Character.on_point():
+        elif bull.x == Tile.get_tile(Tile.MAP['point']).x and bull.y == Tile.get_tile(Tile.MAP['point']).y and not Character.on_point():
             bull.status = 'happy'
             bill.status = 'sad'
 
@@ -73,7 +77,7 @@ class Character(pygame.Rect):
             bill.status = 'happy'
             bull.status = 'happy'
             Tile.freeze = True
-            Tile.load_level(Tile.level + 1)
+            functions.load_level(Tile.MAP['level'] + 1)
 
         else:
             bill.status = 'sad'
@@ -97,20 +101,6 @@ class Character(pygame.Rect):
 
             screen.blit(character.sprite, (character.x, character.y))
 
-
-
-#//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-class Bill(Character):
-
-    def __init__(self, x, y):
-
-        Character.__init__(self, x, y)
-        self.status = ''
-        self.name = 'Bill'
-        Character.List.append(self)
-
     def movement(self): #MOVES CHARACTER ACCORDING TO VELOCITY ONE FRAME AT A TIME
 
         if self.tx != None and self.ty != None: #IF set_target DID ITS JOB
@@ -118,48 +108,14 @@ class Bill(Character):
             X = self.x - self.tx
             Y = self.y - self.ty
 
-            if X < 0: # --->
+            if X < 0:
                 self.x += Character.vel
-            elif X > 0: # <----
+            elif X > 0:
                 self.x -= Character.vel
 
-            if Y > 0: # up
+            if Y > 0:
                 self.y -= Character.vel
-            elif Y < 0: # down
-                self.y += Character.vel
-
-            if X == 0 and Y == 0:
-                self.tx, self.ty = None, None
-
-
-
-#//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-class Bull(Character):
-
-    def __init__(self, x, y):
-
-        Character.__init__(self, x, y)
-        self.status = ''
-        self.name = 'Bull'
-        Character.List.append(self)
-
-    def movement(self):
-
-        if self.tx != None and self.ty != None:
-
-            X = self.x - self.tx
-            Y = self.y - self.ty
-
-            if X < 0: # --->
-                self.x += Character.vel
-            elif X > 0: # <----
-                self.x -= Character.vel
-
-            if Y > 0: # up
-                self.y -= Character.vel
-            elif Y < 0: # down
+            elif Y < 0:
                 self.y += Character.vel
 
             if X == 0 and Y == 0:

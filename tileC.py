@@ -1,4 +1,4 @@
-import pygame, Funk
+import pygame, functions
 
 class Tile(pygame.Rect):
 
@@ -20,72 +20,11 @@ class Tile(pygame.Rect):
     hole_block = pygame.image.load("images/hole_block.png")
     hole_block_edge = pygame.image.load("images/hole_block_edge.png")
 
-    #LEVEL 0 MAP PROPERTIES
+    #LEVEL PROPERTIES
 
-    level = 0
-    spawning_points = []
-    valids = []
-    holes = []
-    meeting_point = 0
-
+    MAP = {'level' : 0, 'valids' : [], 'holes' : [], 'point' : 0, 'spawn' : []} #MAP: level, valdis, holes, point, spawn
     loading_level = False
-
-    @staticmethod
-    def load_level(level): #SETS ALL LEVEL VARIABLES AND TILE TYPES ACCORDING TO LEVEL
-
-        print 'Loading level {}...'.format(level)
-        Tile.loading_level = True
-
-        if level == 1:
-            Tile.level = 1
-            Tile.valids = [74, 75, 97, 119, 141, 142, 165, 144, 145, 167, 189, 211, 212, 213, 214, 215, 193, 171, 149, 127, 105, 104, 73, 95]
-            Tile.holes = [72, 140]
-            Tile.spawning_points = [(Tile.width * 16, Tile.height * 4), (Tile.width * 8, Tile.height * 3)] # bill, bull
-            Tile.meeting_point = 143
-
-        elif level == 2:
-            Tile.level = 2
-            Tile.valids = [186, 187, 188, 163, 141, 119, 118, 118, 117, 116, 138, 160, 182, 183, 205, 189, 167, 145, 146, 147, 170, 148, 192, 214, 234, 235, 236, 256, 278, 208, 190]
-            Tile.holes = [191]
-            Tile.spawning_points = [(Tile.width * 13, Tile.height * 12), (Tile.width * 6, Tile.height * 9)]
-            Tile.meeting_point = 185
-
-        elif level == 3:
-            Tile.level = 3
-            Tile.valids = [183, 205, 206, 207, 208, 210, 209, 211, 212, 213, 191, 169, 147, 125, 103, 75, 97, 119, 141, 163, 165, 164, 166, 167, 145, 123, 122, 121, 74, 73, 95, 124]
-            Tile.holes = []
-            Tile.spawning_points = [(Tile.width * 6, Tile.height * 4), (Tile.width * 6, Tile.height * 9)]
-            Tile.meeting_point = 1
-
-        elif level == 4:
-            Tile.level = 4
-            Tile.valids = [53, 54, 55, 56, 57, 101, 162, 163, 165, 164, 166, 161, 160, 116, 168, 191, 213, 214, 215, 237, 212, 211, 210, 209, 208, 186, 100, 98, 97, 96, 95, 94, 99, 79,138]
-            Tile.holes = [167]
-            Tile.spawning_points = [(Tile.width * 8, Tile.height * 2), (Tile.width * 16, Tile.height * 10)]
-            Tile.meeting_point = 169
-
-        elif level == 100:
-            Tile.level = 100
-            Tile.valids = []
-            Tile.holes = []
-            Tile.spawning_points = [(Tile.width * 6, Tile.height * 4), (Tile.width * 6, Tile.height * 9)]
-            Tile.meeting_point = 1
-
-        for tile in Tile.List: #SETS NEW TILE TYPES. SAME AS IN create_tiles FUNCTION, JUST REFRESHING FOR NEW MAP
-
-            if tile.number in Tile.valids:
-                tile.type = 'solid'
-            elif tile.number == Tile.meeting_point:
-                tile.type = 'point'
-            elif tile.number in Tile.holes:
-                tile.type = 'hole'
-            else:
-                tile.type = 'empty'
-
-            if tile.type == 'empty':
-                tile.walkable = False
-            else:
-                tile.walkable = True
+    moves = 0
 
 
     @staticmethod
@@ -93,11 +32,11 @@ class Tile(pygame.Rect):
 
         for y in range(0, Tile.screen_size[1], Tile.height):
             for x in range(0, Tile.screen_size[0], Tile.width):
-                if Tile.total_tiles in Tile.valids:
+                if Tile.total_tiles in Tile.MAP['valids']:
                     Tile(x, y, 'solid')
-                elif Tile.total_tiles == Tile.meeting_point:
+                elif Tile.total_tiles == Tile.MAP ['point']:
                     Tile(x, y, 'point')
-                elif Tile.total_tiles in Tile.holes:
+                elif Tile.total_tiles in Tile.MAP['holes']:
                     Tile(x, y, 'hole')
                 else:
                     Tile(x, y, 'empty')
@@ -147,7 +86,12 @@ class Tile(pygame.Rect):
                         else:
                             screen.blit(Tile.solid_block_edge, (tile))
 
-        Funk.text_to_screen(screen, 'Level: ' + str(Tile.level), 20, 20, color = (0,0,0))
+        functions.text_to_screen(screen, 'Level: ' + str(Tile.MAP['level']), 20, 20, color = (0,0,0))
+
+        if (Tile.moves + 1) % int(Tile.moves + 1) != 0:
+                Tile.moves += 0.5
+
+        functions.text_to_screen(screen, 'Moves: ' + str(int(Tile.moves + 0.5)), 20, 40, color = (0,0,0))
 
         if Tile.loading_level:
             pygame.time.Clock().tick(1)
@@ -164,8 +108,8 @@ class Tile(pygame.Rect):
     def show_info(screen, bill, bull):
 
         for tile in Tile.List:
-            Funk.text_to_screen(screen, tile.number, tile.x, tile.y)
-            #Funk.text_to_screen(screen, str(tile.walkable), tile.x, tile.y + 10)
+            functions.text_to_screen(screen, tile.number, tile.x, tile.y)
+            #functions.text_to_screen(screen, str(tile.walkable), tile.x, tile.y + 10)
 
         solid, empty, hole = 0, 0, 0
 
@@ -177,12 +121,12 @@ class Tile(pygame.Rect):
             elif tile.type == 'hole':
                 hole += 1
 
-        Funk.text_to_screen(screen, 'Solid blocks: ' + str(solid), 20, 40, color = (0,0,0))
-        Funk.text_to_screen(screen, 'Hole blocks: ' + str(hole), 20, 60, color = (0,0,0))
-        Funk.text_to_screen(screen, 'Empty blocks: ' + str(empty), 20, 80, color = (0,0,0))
+        functions.text_to_screen(screen, 'Solid blocks: ' + str(solid), 20, 40, color = (0,0,0))
+        functions.text_to_screen(screen, 'Hole blocks: ' + str(hole), 20, 60, color = (0,0,0))
+        functions.text_to_screen(screen, 'Empty blocks: ' + str(empty), 20, 80, color = (0,0,0))
 
-        Funk.text_to_screen(screen, 'Bill position: ' + str(bill.get_number()), 20, 120, color = (0,0,0))
-        Funk.text_to_screen(screen, 'Bull position: ' + str(bull.get_number()), 20, 140, color = (0,0,0))
+        functions.text_to_screen(screen, 'Bill position: ' + str(bill.get_number()), 20, 120, color = (0,0,0))
+        functions.text_to_screen(screen, 'Bull position: ' + str(bull.get_number()), 20, 140, color = (0,0,0))
 
     def __str__(self):
         return str(self.number)

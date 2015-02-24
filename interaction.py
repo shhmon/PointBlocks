@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, functions
 from tileC import Tile
 from object_classes import Character
 
@@ -21,19 +21,19 @@ def interaction(screen, bill, bull):
                     if tile.x == (Mx * Tile.width) and tile.y == (My * Tile.width):
                         tile.type = 'point'
                         tile.walkable = True
-                        if tile.number in Tile.valids:
-                            Tile.valids.remove(tile.number)
-                        Tile.meeting_point = tile.number
-                        Tile.load_level(0)
-                        print 'MP: ' + str(Tile.meeting_point)
+                        if tile.number in Tile.MAP['valids']:
+                            Tile.MAP['valids'].remove(tile.number)
+                        Tile.MAP['point'] = tile.number
+                        functions.load_level(0)
+                        print 'MP: ' + str(Tile.MAP['point'])
                         break
             elif event.button == LEFT:
                 for tile in Tile.List:
-                    if tile.x == (Mx * Tile.width) and tile.y == (My * Tile.width) and tile.number not in Tile.valids:
+                    if tile.x == (Mx * Tile.width) and tile.y == (My * Tile.width) and tile.number not in Tile.MAP['valids']:
                         tile.type = 'solid'
                         tile.walkable = True
-                        Tile.valids.append(tile.number)
-                        print 'Valids: ' + str(Tile.valids)
+                        Tile.MAP['valids'].append(tile.number)
+                        print 'Valids: ' + str(Tile.MAP['valids'])
                         break
 
             elif event.button == MIDDLE:
@@ -41,17 +41,18 @@ def interaction(screen, bill, bull):
                     if tile.x == (Mx * Tile.width) and tile.y == (My * Tile.width):
                         tile.type = 'hole'
                         tile.walkable = True
-                        if tile.number in Tile.valids:
-                            Tile.valids.remove(tile.number)
-                        Tile.holes.append(tile.number)
-                        Tile.load_level(0)
-                        print 'Holes: ' + str(Tile.holes)
+                        if tile.number in Tile.MAP['valids']:
+                            Tile.MAP['valids'].remove(tile.number)
+                        Tile.MAP['holes'].append(tile.number)
+                        functions.load_level(0)
+                        print 'Holes: ' + str(Tile.MAP['holes'])
                         break
 
 #/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if event.type == pygame.QUIT:
             pygame.quit()
+            quit()
             sys.exit()
 
 
@@ -66,16 +67,17 @@ def interaction(screen, bill, bull):
 
         if future_tile_number_bill and future_tile_number_bull in range(1, Tile.total_tiles + 1):
 
-            if future_tile_number_bull == Tile.meeting_point and not Tile.get_tile(future_tile_number_bill).walkable:
-                bull.set_target(Tile.get_tile(future_tile_number_bull))
-
-            if future_tile_number_bill != bull.get_number():
-                if Tile.get_tile(future_tile_number_bill).walkable:
-                    bill.set_target(Tile.get_tile(future_tile_number_bill))
-
-            if future_tile_number_bull != bill.get_number():
-                if Tile.get_tile(future_tile_number_bull).walkable:
+                if future_tile_number_bull == Tile.MAP['point'] and not Tile.get_tile(future_tile_number_bill).walkable:
                     bull.set_target(Tile.get_tile(future_tile_number_bull))
+
+                if future_tile_number_bill != bull.get_number():
+                    if Tile.get_tile(future_tile_number_bill).walkable:
+                        bill.set_target(Tile.get_tile(future_tile_number_bill))
+
+                if future_tile_number_bull != bill.get_number():
+                    if Tile.get_tile(future_tile_number_bull).walkable:
+                        bull.set_target(Tile.get_tile(future_tile_number_bull))
+
 
 #SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
@@ -86,7 +88,7 @@ def interaction(screen, bill, bull):
 
         if future_tile_number_bill and future_tile_number_bull in range(1, Tile.total_tiles + 1):
 
-            if future_tile_number_bull == Tile.meeting_point and not Tile.get_tile(future_tile_number_bill).walkable:
+            if future_tile_number_bull == Tile.MAP['point'] and not Tile.get_tile(future_tile_number_bill).walkable:
                 bull.set_target(Tile.get_tile(future_tile_number_bull))
 
             if future_tile_number_bill != bull.get_number():
@@ -106,7 +108,7 @@ def interaction(screen, bill, bull):
 
         if future_tile_number_bill and future_tile_number_bull in range(1, Tile.total_tiles + 1):
 
-            if future_tile_number_bull == Tile.meeting_point and not Tile.get_tile(future_tile_number_bill).walkable:
+            if future_tile_number_bull == Tile.MAP['point'] and not Tile.get_tile(future_tile_number_bill).walkable:
                 bull.set_target(Tile.get_tile(future_tile_number_bull))
 
             if future_tile_number_bill != bull.get_number():
@@ -126,7 +128,7 @@ def interaction(screen, bill, bull):
 
         if future_tile_number_bill and future_tile_number_bull in range(1, Tile.total_tiles + 1):
 
-            if future_tile_number_bull == Tile.meeting_point and not Tile.get_tile(future_tile_number_bill).walkable:
+            if future_tile_number_bull == Tile.MAP['point'] and not Tile.get_tile(future_tile_number_bill).walkable:
                 bull.set_target(Tile.get_tile(future_tile_number_bull))
 
             if future_tile_number_bill != bull.get_number():
