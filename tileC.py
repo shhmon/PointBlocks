@@ -22,7 +22,7 @@ class Tile(pygame.Rect):
 
     #LEVEL PROPERTIES
 
-    MAP = {'level' : 0, 'valids' : [], 'holes' : [], 'point' : 0, 'spawn' : []} #MAP: level, valdis, holes, point, spawn
+    MAP = {'level' : 0, 'solids' : [], 'holes' : [], 'point' : 0, 'spawn' : []} #MAP: level, valdis, holes, point, spawn
     loading_level = False
     moves = 0
 
@@ -32,7 +32,7 @@ class Tile(pygame.Rect):
 
         for y in range(0, Tile.screen_size[1], Tile.height):
             for x in range(0, Tile.screen_size[0], Tile.width):
-                if Tile.total_tiles in Tile.MAP['valids']:
+                if Tile.total_tiles in Tile.MAP['solids']:
                     Tile(x, y, 'solid')
                 elif Tile.total_tiles == Tile.MAP ['point']:
                     Tile(x, y, 'point')
@@ -95,38 +95,6 @@ class Tile(pygame.Rect):
 
         if Tile.loading_level:
             pygame.time.Clock().tick(1)
-
-
-
-#//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-    @staticmethod
-    def show_info(screen, bill, bull):
-
-        for tile in Tile.List:
-            functions.text_to_screen(screen, tile.number, tile.x, tile.y)
-            #functions.text_to_screen(screen, str(tile.walkable), tile.x, tile.y + 10)
-
-        solid, empty, hole = 0, 0, 0
-
-        for tile in Tile.List:
-            if tile.type == 'solid':
-                solid += 1
-            elif tile.type == 'empty':
-                empty += 1
-            elif tile.type == 'hole':
-                hole += 1
-
-        functions.text_to_screen(screen, 'Solid blocks: ' + str(solid), 20, 40, color = (0,0,0))
-        functions.text_to_screen(screen, 'Hole blocks: ' + str(hole), 20, 60, color = (0,0,0))
-        functions.text_to_screen(screen, 'Empty blocks: ' + str(empty), 20, 80, color = (0,0,0))
-
-        functions.text_to_screen(screen, 'Bill position: ' + str(bill.get_number()), 20, 120, color = (0,0,0))
-        functions.text_to_screen(screen, 'Bull position: ' + str(bull.get_number()), 20, 140, color = (0,0,0))
 
     def __str__(self):
         return str(self.number)

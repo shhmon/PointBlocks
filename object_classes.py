@@ -8,11 +8,12 @@ class Character(pygame.Rect):
     List = []
     vel = 3
 
-    def __init__(self, name, x, y):
+    def __init__(self, name):
 
         self.tx, self.ty = None, None
+        self.x, self.y = 0, 0
         self.name = name
-        pygame.Rect.__init__(self, x, y, Character.width, Character.height)
+        pygame.Rect.__init__(self, self.x, self.y, Character.width, Character.height)
         Character.List.append(self)
 
     def __str__(self):
@@ -39,8 +40,8 @@ class Character(pygame.Rect):
 
     @staticmethod
     def respawn(bill, bull):
-        bill.x, bill.y = Tile.MAP['spawn'][0][0], Tile.MAP['spawn'][0][1]
-        bull.x, bull.y = Tile.MAP['spawn'][1][0], Tile.MAP['spawn'][1][1]
+        bill.x, bill.y = Tile.get_tile(Tile.MAP['spawn'][0]).x, Tile.get_tile(Tile.MAP['spawn'][0]).y
+        bull.x, bull.y = Tile.get_tile(Tile.MAP['spawn'][1]).x, Tile.get_tile(Tile.MAP['spawn'][1]).y
 
     @staticmethod
     def on_point(): #RETURNS TRUE IF BOTH CHARACTERS X & Y = meeting_point's X & Y (are on meeting_point)

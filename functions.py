@@ -21,20 +21,20 @@ def load_level(level): #SETS ALL LEVEL VARIABLES AND TILE TYPES ACCORDING TO LEV
     Tile.moves = 0 
 
     if level == 1:
-    	Tile.MAP = {'point': 143, 'spawn': [(720, 180), (360, 135)], 'valids': [74, 75, 97, 119, 141, 142, 165, 144, 145, 167, 189, 211, 212, 213, 214, 215, 193, 171, 149, 127, 105, 104, 73, 95], 'holes': [72, 140], 'level': 1}
+    	Tile.MAP = {'point': 143, 'spawn': [105, 75], 'solids': [74, 75, 97, 119, 141, 142, 165, 144, 145, 167, 189, 211, 212, 213, 214, 215, 193, 171, 149, 127, 105, 104, 73, 95], 'holes': [72, 140], 'level': 1}
 
     elif level == 2:
-        Tile.MAP = {'point': 164, 'spawn': [(630, 495), (315, 360)], 'valids': [165, 166, 167, 142, 120, 98, 97, 97, 96, 95, 117, 139, 161, 162, 184, 168, 146, 124, 125, 126, 149, 127, 171, 193, 213, 214, 215, 235, 257, 187, 170], 'holes': [169], 'level': 2}
+        Tile.MAP = {'point': 164, 'spawn': [257, 211], 'solids': [165, 166, 167, 168, 146, 124, 125, 126, 149, 127, 171, 193, 213, 214, 215, 235, 257, 170, 189, 211], 'holes': [169], 'level': 2}
 
     elif level == 3:
-        Tile.MAP = {'point': 169, 'spawn': [(360, 90), (720, 450)], 'valids': [53, 54, 55, 56, 57, 101, 162, 163, 165, 164, 166, 161, 160, 116, 168, 191, 213, 214, 215, 237, 212, 211, 210, 209, 208, 186, 100, 98, 97, 96, 95, 94, 99, 79, 138], 'holes': [167], 'level': 3}
+        Tile.MAP = {'point': 143, 'spawn': [96, 101], 'solids': [141, 142, 165, 144, 145, 167, 163, 121, 99, 100, 119, 97, 96, 101], 'holes': [140], 'level': 3}
 
     elif level == 100:
-    	Tile.MAP = {'point': 1, 'spawn': [(1, 1), (1, 1)], 'valids': [], 'holes': [], 'level': 100}
+    	Tile.MAP = {'point': 0, 'spawn': [0, 0], 'solids': [28, 50, 72, 94, 116, 29, 74, 52, 96, 117, 32, 54, 76, 98, 120, 121, 77, 33, 270, 226, 182, 274, 278, 190, 194, 238, 180, 202, 224, 246, 268, 181, 225, 269, 184, 206, 228, 250, 272, 273, 276, 254, 232, 210, 188, 277, 234, 212, 256, 189, 192, 214, 236, 258, 280, 237, 193, 216, 34, 78, 122, 36, 58, 80, 102, 125, 104, 82, 60, 38], 'holes': [], 'level': 100}
 
     for tile in Tile.List: #SETS NEW TILE TYPES. SAME AS IN Tile.create_tiles FUNCTION, JUST REFRESHING FOR NEW MAP
 
-        if tile.number in Tile.MAP['valids']:
+        if tile.number in Tile.MAP['solids']:
             tile.type = 'solid'
         elif tile.number == Tile.MAP['point']:
             tile.type = 'point'
