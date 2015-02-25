@@ -1,4 +1,4 @@
-import pygame, sys, functions
+import pygame, sys, functions, develop
 from tileC import Tile
 from object_classes import *
 from interaction import interaction
@@ -10,15 +10,16 @@ pygame.mixer.init()
 S_MENU = 1
 S_GAME = 2
 S_ESC = 3
+S_DEVELOP = 100
 
 FPS = 60
 
 class Controller():
 
-	def __init__(self):
+	def __init__(self, state = S_MENU):
 
 		self.screen = pygame.display.set_mode(Tile.screen_size)
-		self.state = S_GAME
+		self.state = state
 		self.background = pygame.image.load("images/background.png")
 		self.clock = pygame.time.Clock()
 
@@ -28,14 +29,14 @@ class Controller():
 
 		elif self.state == S_GAME:
 
-			functions.load_level(1)
+			functions.load_level(99)
 			Tile.create_tiles()
 			sound = pygame.mixer.Sound("audio/music.wav")
 			sound.set_volume(.05)
 			sound.play(-1)
 
-			bill = Character('Bill', Tile.MAP['spawn'][0][0], Tile.MAP['spawn'][0][1])
-			bull = Character('Bull', Tile.MAP['spawn'][1][0], Tile.MAP['spawn'][1][1])
+			bill = Character('Bill')
+			bull = Character('Bull')
 
 			while True:
 				self.screen.blit(self.background, (0,0))
@@ -48,7 +49,7 @@ class Controller():
 				bill.movement()
 				bull.movement()
 
-				#Tile.show_info(screen, bill, bull)
+				#develop.show_info(self.screen)
 
 				pygame.display.flip()
 				self.clock.tick(FPS)
@@ -56,3 +57,19 @@ class Controller():
 
 		elif self.state == S_ESC:
 			pass
+
+		elif self.state == S_DEVELOP:
+
+			functions.load_level(100)
+			Tile.create_tiles()
+
+			while True:
+				self.screen.fill((200,200,200))
+				develop.draw_tiles(self.screen)
+				develop.build_controls(self.screen)
+
+				develop.show_inter_window()
+				#develop.show_info(self.screen)
+
+				pygame.display.flip()
+				self.clock.tick(FPS)
