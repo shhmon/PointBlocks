@@ -1,4 +1,4 @@
-import pygame, sys, functions, develop
+import pygame, sys, functions
 from tileC import Tile
 from object_classes import *
 from interaction import interaction
@@ -19,24 +19,30 @@ class Controller():
 	def __init__(self, state = S_MENU):
 
 		self.screen = pygame.display.set_mode(Tile.screen_size)
+		self.caption = 'PointBlocks v 1.0'
 		self.state = state
-		self.background = pygame.image.load("images/background.png")
+		self.background = Tile.background
 		self.clock = pygame.time.Clock()
 
 	def run(self):
+
+		pygame.display.set_caption(self.caption)
+
 		if self.state == S_MENU:
 			pass
 
 		elif self.state == S_GAME:
 
-			functions.load_level(99)
+			functions.load_level(1)
 			Tile.create_tiles()
 			sound = pygame.mixer.Sound("audio/music.wav")
-			sound.set_volume(.05)
+			sound.set_volume(.5)
 			sound.play(-1)
 
 			bill = Character('Bill')
 			bull = Character('Bull')
+
+			print Tile.MAP
 
 			while True:
 				self.screen.blit(self.background, (0,0))
@@ -49,27 +55,9 @@ class Controller():
 				bill.movement()
 				bull.movement()
 
-				#develop.show_info(self.screen)
-
 				pygame.display.flip()
 				self.clock.tick(FPS)
 
 
 		elif self.state == S_ESC:
 			pass
-
-		elif self.state == S_DEVELOP:
-
-			functions.load_level(100)
-			Tile.create_tiles()
-
-			while True:
-				self.screen.fill((200,200,200))
-				develop.draw_tiles(self.screen)
-				develop.build_controls(self.screen)
-
-				develop.show_inter_window()
-				#develop.show_info(self.screen)
-
-				pygame.display.flip()
-				self.clock.tick(FPS)

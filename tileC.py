@@ -1,4 +1,5 @@
 import pygame, functions
+from sprites import *
 
 class Tile(pygame.Rect):
 
@@ -6,19 +7,26 @@ class Tile(pygame.Rect):
 
     List = []
     freeze = False
-    screen_size = (990, 675)
-    width, height = 45, 45
+    aim_screen_size = (1000, 700)
+    width, height = 45, 45 #maps made for 45, 45
     total_tiles = 1
-    H, V = 1, 22
 
-    # SPRITES
+    #SCREEN SIZE SUITS EVERY TILE SIZE
 
-    solid_block = pygame.image.load("images/solid_block.png")
-    solid_block_edge = pygame.image.load("images/solid_block_edge.png")
-    point_block = pygame.image.load("images/point_block.png")
-    point_block_edge = pygame.image.load("images/point_block_edge.png")
-    hole_block = pygame.image.load("images/hole_block.png")
-    hole_block_edge = pygame.image.load("images/hole_block_edge.png")
+    screen_size = (int(aim_screen_size[0] / width) * width, int(aim_screen_size[1] / height) * height)
+    H, V = 1, screen_size[0] / width
+
+    #TRANSFORM SPRITES FOR ANY TILE SIZE
+
+    background = pygame.transform.scale(background, (screen_size[0], screen_size[1]))
+
+    solid_block = pygame.transform.scale(solid_block, (width, height))
+    point_block = pygame.transform.scale(point_block, (width, height))
+    hole_block = pygame.transform.scale(hole_block, (width, height))
+
+    solid_block_edge = pygame.transform.scale(solid_block_edge, (width, height * 83/45))
+    point_block_edge = pygame.transform.scale(point_block_edge, (width, height * 83/45))
+    hole_block_edge = pygame.transform.scale(hole_block_edge, (width, height * 83/45))
 
     #LEVEL PROPERTIES
 

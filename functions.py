@@ -13,7 +13,6 @@ def text_to_screen(screen, text, x, y, size = 15, color = (255, 255, 255), font_
         print 'Font error, saw it comming'
         raise e
 
-
 def load_level(level = 1): #SETS ALL LEVEL VARIABLES AND TILE TYPES ACCORDING TO LEVEL
 
     print 'Loading level {}...'.format(level)
@@ -47,21 +46,3 @@ def load_level(level = 1): #SETS ALL LEVEL VARIABLES AND TILE TYPES ACCORDING TO
         i += 1
 
     levelfile.close()
-
-    for tile in Tile.List: #SETS NEW TILE TYPES. SAME AS IN Tile.create_tiles FUNCTION, JUST REFRESHING FOR NEW MAP
-
-        if tile.number in Tile.MAP['solids']:
-            tile.type = 'solid'
-        elif tile.number == Tile.MAP['point']:
-            tile.type = 'point'
-        elif tile.number in Tile.MAP['holes']:
-            tile.type = 'hole'
-        else:
-            tile.type = 'empty'
-
-        if tile.type == 'empty':
-            tile.walkable = False
-        else:
-            tile.walkable = True
-
-    print 'Done!'

@@ -1,26 +1,12 @@
 import pygame, random, functions
 from tileC import Tile
-from sprites import *
 
 
 class Character(pygame.Rect):
 
-    width, height = Tile.width, Tile.height
+    width, height = 45, 45
     List = []
-
-    #SUIT FOR TILE SIZE
-    for i in range(2, 9):
-        if Tile.width % i == 0 and Tile.height % i == 0:
-            vel = i
-            break
-    print vel
-
-    #TRANSFORM SPRITES FOR ANY TILE SIZE
-
-    bill_sprite_sad = pygame.transform.scale(bill_sprite_sad, (width, height))
-    bull_sprite_sad = pygame.transform.scale(bull_sprite_sad, (width, height))
-    bill_sprite_happy = pygame.transform.scale(bill_sprite_happy, (width, height))
-    bull_sprite_happy = pygame.transform.scale(bull_sprite_happy, (width, height))
+    vel = 3
 
     def __init__(self, name):
 
@@ -104,15 +90,15 @@ class Character(pygame.Rect):
         for character in Character.List:
             if character.status == 'sad':
                 if character.name == 'Bill':
-                    character.sprite = Character.bill_sprite_sad
+                    character.sprite = pygame.image.load('images/bill.png')
                 elif character.name == 'Bull':
-                    character.sprite = Character.bull_sprite_sad
+                    character.sprite = pygame.image.load('images/bull.png')
 
             elif character.status == 'happy':
                 if character.name == 'Bill':
-                    character.sprite = Character.bill_sprite_happy
+                    character.sprite = pygame.image.load('images/bill_happy.png')
                 elif character.name == 'Bull':
-                    character.sprite = Character.bull_sprite_happy
+                    character.sprite = pygame.image.load('images/bull_happy.png')
 
             screen.blit(character.sprite, (character.x, character.y))
 
