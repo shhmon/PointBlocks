@@ -5,8 +5,8 @@ class Tile(pygame.Rect):
 
     #SCREEN & TILE SIZE PROPERTIES
 
+
     List = []
-    freeze = False
     aim_screen_size = (1000, 700)
     width, height = 45, 45 #maps made for 45, 45
     total_tiles = 1
@@ -31,13 +31,11 @@ class Tile(pygame.Rect):
     #LEVEL PROPERTIES
 
     MAP = {'level' : 0, 'solids' : [], 'holes' : [], 'point' : 0, 'spawn' : []} #MAP: level, valdis, holes, point, spawn
-    loading_level = False
     moves = 0
 
 
     @staticmethod
     def create_tiles(): #SPLITS THE SCREEN INTO TILES AND GIVES THEM TYPES. (ONE TIME RUN)
-
         for y in range(0, Tile.screen_size[1], Tile.height):
             for x in range(0, Tile.screen_size[0], Tile.width):
                 if Tile.total_tiles in Tile.MAP['solids']:
@@ -55,6 +53,29 @@ class Tile(pygame.Rect):
             else:
                 tile.walkable = True
 
+    @staticmethod
+    def retype():
+        for tile in Tile.List:
+            tile.type = 'empty'
+        for tile in Tile.List:
+            if tile.number in Tile.MAP['solids']:
+                tile.type = 'solid'
+            elif tile.number == Tile.MAP ['point']:
+                tile.type = 'point'
+            elif tile.number in Tile.MAP['holes']:
+                tile.type = 'hole'
+            else:
+                tile.type = 'empty'
+
+        for tile in Tile.List:
+            if tile.type == 'empty':
+                tile.walkable = False
+            else:
+                tile.walkable = True
+
+    @staticmethod
+    def clear_map_dict():
+        Tile.MAP = {'level' : 0, 'solids' : [], 'holes' : [], 'point' : 0, 'spawn' : []}
 
     def __init__(self, x, y, Type):
 
@@ -100,9 +121,6 @@ class Tile(pygame.Rect):
                 Tile.moves += 0.5
 
         functions.text_to_screen(screen, 'Moves: ' + str(int(Tile.moves + 0.5)), 20, 40, color = (0,0,0))
-
-        if Tile.loading_level:
-            pygame.time.Clock().tick(1)
 
     def __str__(self):
         return str(self.number)

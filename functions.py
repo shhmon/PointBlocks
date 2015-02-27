@@ -1,5 +1,9 @@
-import pygame, csv
+import pygame, csv, sys
 from tileC import Tile
+from characterC import Character
+
+global state
+state = 1
 
 def text_to_screen(screen, text, x, y, size = 15, color = (255, 255, 255), font_type = 'monospace'):
 
@@ -13,36 +17,56 @@ def text_to_screen(screen, text, x, y, size = 15, color = (255, 255, 255), font_
         print 'Font error, saw it comming'
         raise e
 
+def get_state():
+    global state
+    return state
+
 def load_level(level = 1): #SETS ALL LEVEL VARIABLES AND TILE TYPES ACCORDING TO LEVEL
 
-    print 'Loading level {}...'.format(level)
-    Tile.loading_level = True
-    Tile.moves = 0
-    filename = 'level/level{}.csv'.format(level)
+    try:
 
-    levelfile = open(filename)
+        List = []
+        Tile.moves = 0
 
-    csv_levelfile = csv.reader(levelfile)
+        print 'Loading level {}...'.format(level)
+        filename = 'level/level{}.csv'.format(level)
 
-    i = 0
+        levelfile = open(filename)
+        csv_levelfile = csv.reader(levelfile)
 
-    for row in csv_levelfile:
-        if i == 0:
-            Tile.MAP['level'] = int(row[0])
-        elif i == 1:
-            for element in row:
-                Tile.MAP['spawn'].append(int(element))
-        elif i == 2:
-            Tile.MAP['point'] = int(row[0])
-        elif i == 3:
-            for element in row:
-                Tile.MAP['holes'].append(int(element))
-        elif i == 4:
-            for element in row:
-                Tile.MAP['solids'].append(int(element))
-        elif i == 5:
-            i = 0
+        i = 0
 
-        i += 1
+        Tile.clear_map_dict()
 
-    levelfile.close()
+        for row in csv_levelfile:
+            if i == 0:
+                Tile.MAP['level'] = int(row[0])
+            elif i == 1:
+                for element in row:
+                    Tile.MAP['spawn'].append(int(element))
+            elif i == 2:
+                Tile.MAP['point'] = int(row[0])
+            elif i == 3:
+                for element in row:
+                    Tile.MAP['holes'].append(int(element))
+            elif i == 4:
+                for element in row:
+                    Tile.MAP['solids'].append(int(element))
+            elif i == 5:
+                i = 0
+
+            i += 1
+
+        for character in Character.List:
+            character.tx, character.ty = None, None
+            character.unnatural = False
+
+        levelfile.close()
+        Tile.retype()
+        Character.respawn()
+
+
+    except Exception, e:
+        print 'Could not load level {}'.format(level)
+        pygame.quit()
+        sys.exit()

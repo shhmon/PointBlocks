@@ -7,13 +7,15 @@ class Character(pygame.Rect):
 
     width, height = Tile.width, Tile.height
     List = []
+    speedx = 0
+    speedy = 0
+    acceleration = 0.45
 
     #SUIT FOR TILE SIZE
     for i in range(2, 9):
         if Tile.width % i == 0 and Tile.height % i == 0:
             vel = i
             break
-    print vel
 
     #TRANSFORM SPRITES FOR ANY TILE SIZE
 
@@ -27,6 +29,7 @@ class Character(pygame.Rect):
         self.tx, self.ty = None, None
         self.x, self.y = 0, 0
         self.name = name
+        self.unnatural = False
         pygame.Rect.__init__(self, self.x, self.y, Character.width, Character.height)
         Character.List.append(self)
 
@@ -53,9 +56,12 @@ class Character(pygame.Rect):
         return Tile.get_tile(self.get_number())
 
     @staticmethod
-    def respawn(bill, bull):
-        bill.x, bill.y = Tile.get_tile(Tile.MAP['spawn'][0]).x, Tile.get_tile(Tile.MAP['spawn'][0]).y
-        bull.x, bull.y = Tile.get_tile(Tile.MAP['spawn'][1]).x, Tile.get_tile(Tile.MAP['spawn'][1]).y
+    def respawn():
+        for character in Character.List:
+            if character.name == 'Bill':
+                character.x, character.y = Tile.get_tile(Tile.MAP['spawn'][0]).x, Tile.get_tile(Tile.MAP['spawn'][0]).y
+            else:
+                character.x, character.y = Tile.get_tile(Tile.MAP['spawn'][1]).x, Tile.get_tile(Tile.MAP['spawn'][1]).y
 
     @staticmethod
     def on_point(): #RETURNS TRUE IF BOTH CHARACTERS X & Y = meeting_point's X & Y (are on meeting_point)
@@ -67,36 +73,34 @@ class Character(pygame.Rect):
             return True
 
     @staticmethod
-    def update_characters(bill, bull): #LOOKS FOR CHARACTERS FALLING IN HOLES OR STANDING ON MEETING POINT. IF loading_level IS TRUE, TELEPORTS CHARACTERS TO SPAWNING POINTS
-        for character in Character.List:
-            if Tile.get_tile(character.get_number()).type == 'hole':
-                if Tile.get_tile(character.get_number()).x == character.x and Tile.get_tile(character.get_number()).y == character.y:
-                    if not character.has_target():
-                        Tile.freeze = True
-                        functions.load_level(Tile.MAP['level'])
+    def update_characters(bill, bull): #LOOKS FOR CHARACTERS FALLING IN HOLES OR STANDING ON MEETING POINT.
 
-        if Tile.loading_level == True:
-            Character.respawn(bill, bull)
+        try:
+            for character in Character.List:
+                if Tile.get_tile(character.get_number()).type == 'hole':
+                    if Tile.get_tile(character.get_number()).x == character.x and Tile.get_tile(character.get_number()).y == character.y:
+                        if not character.has_target():
+                            functions.load_level(Tile.MAP['level'])
 
-            Tile.loading_level = False
+            if bill.x == Tile.get_tile(Tile.MAP['point']).x and bill.y == Tile.get_tile(Tile.MAP['point']).y and not Character.on_point():
+                bill.status = 'happy'
+                bull.status = 'sad'
 
-        if bill.x == Tile.get_tile(Tile.MAP['point']).x and bill.y == Tile.get_tile(Tile.MAP['point']).y and not Character.on_point():
-            bill.status = 'happy'
-            bull.status = 'sad'
+            elif bull.x == Tile.get_tile(Tile.MAP['point']).x and bull.y == Tile.get_tile(Tile.MAP['point']).y and not Character.on_point():
+                bull.status = 'happy'
+                bill.status = 'sad'
 
-        elif bull.x == Tile.get_tile(Tile.MAP['point']).x and bull.y == Tile.get_tile(Tile.MAP['point']).y and not Character.on_point():
-            bull.status = 'happy'
-            bill.status = 'sad'
+            elif Character.on_point():
+                bill.status = 'happy'
+                bull.status = 'happy'
+                functions.load_level(Tile.MAP['level'] + 1)
 
-        elif Character.on_point():
-            bill.status = 'happy'
-            bull.status = 'happy'
-            Tile.freeze = True
-            functions.load_level(Tile.MAP['level'] + 1)
+            else:
+                bill.status = 'sad'
+                bull.status = 'sad'
 
-        else:
-            bill.status = 'sad'
-            bull.status = 'sad'
+        except Exception, e:
+            functions.load_level(Tile.MAP['level'])
 
 
     @staticmethod
@@ -123,15 +127,34 @@ class Character(pygame.Rect):
             X = self.x - self.tx
             Y = self.y - self.ty
 
-            if X < 0:
-                self.x += Character.vel
-            elif X > 0:
-                self.x -= Character.vel
+            if self.unnatural == True: #UNNATURAL
 
-            if Y > 0:
-                self.y -= Character.vel
-            elif Y < 0:
-                self.y += Character.vel
+                Character.speedx += X/100
+                Character.speedy += Y/100
+
+                print Character.speedx * 2
+
+                if X < 0:
+                    self.x += Character.speedx * 2
+                elif X > 0:
+                    self.x -= Character.speedx * 2
+                if Y > 0:
+                    self.y -= Character.speedy * 2
+                elif Y < 0:
+                    self.y += Character.speedy * 2
+
+            else:
+
+                if X < 0: #right
+                    self.x += Character.vel
+                elif X > 0: #left
+                    self.x -= Character.vel
+
+                if Y > 0: #down
+                    self.y -= Character.vel
+                elif Y < 0: #up
+                    self.y += Character.vel
 
             if X == 0 and Y == 0:
                 self.tx, self.ty = None, None
+                self.unnatural = False
