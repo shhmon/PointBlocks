@@ -1,6 +1,6 @@
 #PointBlocks
 
-This is an old project of mine from the times when I was learning Python (which was also my first programming language). This was actually my first project, but unfortunately it was never finished.
+This is an old project of mine from the times when I was learning Python (which was also my first programming language). This was actually my first or second project, but unfortunately it was never finished.
 
 * _runs Python 2.7_
 
