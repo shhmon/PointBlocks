@@ -58,7 +58,7 @@ class Controller():
 
 			functions.load_level(1)
 			sound = pygame.mixer.Sound("audio/music.wav")
-			sound.set_volume(.5)
+			sound.set_volume(.25)
 			sound.play(-1)
 
 			print Tile.MAP

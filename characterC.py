@@ -30,6 +30,8 @@ class Character(pygame.Rect):
         self.x, self.y = 0, 0
         self.name = name
         self.unnatural = False
+        self.sound = pygame.mixer.Sound("audio/swishandflick.wav")
+        self.sound.set_volume(0.01)
         pygame.Rect.__init__(self, self.x, self.y, Character.width, Character.height)
         Character.List.append(self)
 
